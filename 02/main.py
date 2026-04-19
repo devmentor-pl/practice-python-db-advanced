@@ -19,42 +19,23 @@ def main():
             pawel = create_author("Paweł T")
             jan = create_author("Jan Nowak")
             session.add_all([pawel, jan])
-            session.commit()
-        
-        except SQLAlchemyError as e:
-            session.rollback()
-            print(f"Error: {e}")
-        
-    
-    with Session(engine) as session:
-        try:
-            author = session.query(Author).filter_by(name="Paweł T").first()
-        
-            book1 = create_book("Django 5", author.id)
-            book2 = create_book("Django 6", author.id)
-            book3 = create_book("Python od podstaw", author.id)
+            session.flush()
             
-            session.add_all([book1, book2, book3])
-            session.commit()
-        except SQLAlchemyError as e:
-            session.rollback()
-            print(f"Error: {e}")
-    
-    
-    with Session(engine) as session:
-        try:
-            author = session.query(Author).filter_by(name="Jan Nowak").first()
-        
-            book1 = create_book("Bardzo dobra ksiązka", author.id)
-            book2 = create_book("Najlepsza ksiązka", author.id)
-            book3 = create_book("AI nie wyprze programostów", author.id)
-            book4 = create_book("AI to tylko narzędzie dla programistów", author.id)
+            session.add_all([
+                create_book("Django 5", pawel.id),
+                create_book("Django 6", pawel.id),
+                create_book("Python od podstaw", pawel.id),
+                create_book("Bardzo dobra ksiązka", jan.id),
+                create_book("Najlepsza ksiązka", jan.id),
+                create_book("AI nie wyprze programostów", jan.id),
+                create_book("AI to tylko narzędzie dla programistów", jan.id),
+            ])
             
-            session.add_all([book1, book2, book3, book4])
             session.commit()
         except SQLAlchemyError as e:
             session.rollback()
             print(f"Error: {e}")
+        
     
     # Pobierz i wypisz wszystkie książki konkretnego autora (np. „Jan Nowak”).
     with Session(engine) as session:
